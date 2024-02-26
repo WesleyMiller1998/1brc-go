@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
 
 type Info struct {
+	City  string
 	Total float64
 	Count float64
 	Min   float64
@@ -42,6 +44,7 @@ func main() {
 		info, found := cityInfo[parts[0]]
 		if !found {
 			cityInfo[parts[0]] = &Info{
+				City:  parts[0],
 				Total: temp,
 				Count: 1,
 				Min:   temp,
@@ -61,7 +64,19 @@ func main() {
 		}
 	}
 
-	for city, info := range cityInfo {
-		fmt.Printf("%s: %v\n", city, info)
+	cities := make([]Info, len(cityInfo))
+
+	for _, info := range cityInfo {
+		cities = append(cities, *info)
 	}
+
+	sort.Slice(cities, func(i, j int) bool {
+		return cities[i].City < cities[j].City
+	})
+
+	fmt.Printf("{ %s=%.2f/%.2f/%.2f", cities[0].City, cities[0].Min, cities[0].Total/cities[0].Count, cities[0].Max)
+	for _, info := range cities {
+		fmt.Printf(", %s=%.2f/%.2f/%.2f", info.City, info.Min, info.Total/info.Count, info.Max)
+	}
+	fmt.Println(" }")
 }
