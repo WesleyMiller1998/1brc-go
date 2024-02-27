@@ -83,5 +83,5 @@ func main() {
 	}
 	fmt.Println(" }")
 
-	fmt.Printf("took %s seconds\n", time.Since(start))
+	fmt.Printf("took %s\n", time.Since(start))
 }
