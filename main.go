@@ -8,6 +8,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type Info struct {
@@ -19,12 +20,14 @@ type Info struct {
 }
 
 func main() {
-	file, err := os.Open("measurements_10000.txt")
+	file, err := os.Open(os.Args[1])
 	if err != nil {
 		slog.Error("failed to open file", "err", err)
 		os.Exit(1)
 	}
 	defer file.Close()
+
+	start := time.Now()
 
 	cityInfo := make(map[string]*Info)
 
@@ -79,4 +82,6 @@ func main() {
 		fmt.Printf(", %s=%.2f/%.2f/%.2f", info.City, info.Min, info.Total/info.Count, info.Max)
 	}
 	fmt.Println(" }")
+
+	fmt.Printf("took %s seconds\n", time.Since(start))
 }
